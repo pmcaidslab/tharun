@@ -1,0 +1,24 @@
+trigger:
+  - main
+
+pool:
+  name: 'Default'  # Replace with your self-hosted agent pool name
+  demands:
+    - Agent.Name -equals MyAgent  # Replace with your specific agent's name
+
+steps:
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/site.zip'
+      replaceExistingArchive: true
+    displayName: 'Archive HTML Files'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/site.zip'
+      ArtifactName: 'html-site'
+      publishLocation: 'Container'
+    displayName: 'Publish HTML Artifact'
